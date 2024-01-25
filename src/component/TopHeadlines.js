@@ -15,27 +15,30 @@ export class TopHeadlines extends Component {
   }
  
   
-  constructor(){
+  constructor(props){
     
-    super();
+    super(props);
     this.state = {
       articles : [],
       load : false,
-      page:1,
-      
+      page:1,  
       totalResults : 0
     }
+    document.title = `${this.Capitalize(this.props.category)}`
   }
-  async componentDidMount(){
+  update = async()=>{
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=fe40353bba814254a134667b50fda0bb&page=${this.state.page}&pageSize=${this.props.pageSize}`
     this.setState({load : true})
     let data = await fetch(url)
     let parseData = await data.json()
     this.setState({
       articles : parseData.articles,
-      totalResults : parseData.totalResults,
+      page : this.state.page,
       load : false
     })
+  }
+  async componentDidMount(){
+    this.update();
 
   }
   preclickHandler = async ()=>{
@@ -43,15 +46,10 @@ export class TopHeadlines extends Component {
 
     }
     else{
-      let url = `https://newsapi.org/v2/top-headlines?country=${'us'}&category=${this.props.category}&apiKey=fe40353bba814254a134667b50fda0bb&page=${this.state.page-1}&pageSize=${this.props.pageSize}`
-      this.setState({load : true})
-      let data = await fetch(url)
-      let parseData = await data.json()
       this.setState({
-        articles : parseData.articles,
-        page : this.state.page - 1,
-        load : false
+        page:this.state.page-1
       })
+      this.update();
     }
   }
   nextclickHandler = async()=>{
@@ -59,23 +57,23 @@ export class TopHeadlines extends Component {
 
     }
     else{
-      let url = `https://newsapi.org/v2/top-headlines?country=${'us'}&category=${this.props.category}&apiKey=fe40353bba814254a134667b50fda0bb&page=${this.state.page+1}&pageSize=${this.props.pageSize}`
-      this.setState({load : true})
-      let data = await fetch(url)
-      let parseData = await data.json()
       this.setState({
-        articles : parseData.articles,
-        page : this.state.page + 1,
-        load : false
+        page : this.state.page+1
       })
+      this.update();
     }
   }
+  
+  Capitalize = (str)=>{
+    return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    
   render() {
     return (
       
       <div className='container my-3'>
       
-        <h2>NewsLetter | Top Headlines</h2>
+        <h2 className='text-center my-4'>Top-{this.Capitalize(document.title)}-Headlines</h2>
         {this.state.load && <Spinner/>}
         <div className="row">
           {!this.state.load && this.state.articles.map((element)=>{

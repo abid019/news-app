@@ -15,7 +15,7 @@ export class NewsBox extends Component {
                   {this.props.name}
                 </span>
                 <p className="card-text"><small className="text-body-secondary">{this.props.author ? this.props.author:"Unknown"} on {new Date(this.props.publishedAt).toGMTString()}</small></p>
-                <a href={url} target="_blank"  className="btn btn-sm btn-primary">Read More</a>
+                <a href={url} className="btn btn-sm btn-primary">Read More</a>
             </div>
         </div>
       </div>
